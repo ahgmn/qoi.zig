@@ -1,0 +1,6 @@
+.direnv/
+.envrc
+zig-out/
+.zig-cache/
+*.ppm
+
