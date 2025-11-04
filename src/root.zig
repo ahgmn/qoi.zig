@@ -216,10 +216,10 @@ test "index hash" {
 }
 
 test "decode" {
-    const f = try std.fs.cwd().openFile("assets/silksong.qoi", .{ .mode = .read_only });
-    defer f.close();
-    var f_buf: [1024]u8 = undefined;
-    var reader = f.reader(&f_buf);
+    const input = try std.fs.cwd().openFile("assets/silksong.qoi", .{ .mode = .read_only });
+    defer input.close();
+    var input_buf: [1024]u8 = undefined;
+    var reader = input.reader(&input_buf);
 
     const output = try std.fs.cwd().createFile("assets/silksong.ppm", .{});
     defer output.close();
