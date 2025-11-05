@@ -66,7 +66,6 @@ pub const Pixel = extern struct {
 };
 
 const State = struct {
-    allocator: std.mem.Allocator,
     pixel_index: u64 = 0,
     current_op: u8,
     last_pixel: Pixel = .{},
@@ -136,20 +135,15 @@ pub fn decode(allocator: std.mem.Allocator, reader: *std.Io.Reader) QoiError!Ima
     @memset(image.pixels, .{});
 
     var state = State{
-        .allocator = allocator,
         .current_op = undefined,
         .image = &image,
         .pixel_table = undefined,
     };
-    @memset(&state.pixel_table, .{ .a = 255 });
+    @memset(&state.pixel_table, .{});
 
-    while (!state.allPixelsWritten() or
-        !std.mem.eql(
-            u8,
-            reader.peek(8) catch return error.Invalid,
-            &endingBytes,
-        ))
-    {
+    while (!state.allPixelsWritten()) {
+        if (std.mem.eql(u8, reader.peek(8) catch return error.Invalid, &endingBytes)) break;
+
         state.current_op = reader.takeByte() catch return error.Invalid;
         switch (state.getOp()) {
             .RGB => {
@@ -265,4 +259,5 @@ test "decode" {
         const p = image.pixels[i];
         try writer.interface.print("{} {} {}\n", .{ p.r, p.g, p.b });
     }
+    try writer.interface.flush();
 }
