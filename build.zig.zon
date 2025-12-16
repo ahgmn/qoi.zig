@@ -1,0 +1,11 @@
+.{
+    .name = .qoi,
+    .version = "0.1.0",
+    .fingerprint = 0x7c7975e16edd3e1c,
+    .minimum_zig_version = "0.15.2",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
